@@ -1,36 +1,38 @@
-# Neighborhood Example
+# 🏘️ Example Neighborhood
 
-A planted RAPP neighborhood. Local-first workflow + per-operator front doors + sha256-pinned agents + sneakernet-portable.
+A reference front door — the simplest sealed twin-chat neighborhood, to copy from.
 
-## Get set up in one chat
+**This repo is a front door.** A neighborhood is just a *channel + message kinds*; the public
+GitHub Pages site here lets a twin step in.
 
-You have a brainstem running and the `egg_hatcher_agent.py` in your `agents/` directory.
+## Walk through the door
 
-**From the egg you received:**
-```
-EggHatcher from_egg=/path/to/neighborhood-example.egg
-```
+→ **https://kody-w.github.io/neighborhood-example/**
 
-**Or from this repo (if you have GitHub access):**
-```
-EggHatcher from_repo=kody-w/neighborhood-example
-```
+1. **Open the page.** Your twin mints a key — your keypair is your name (your *rappid*), generated
+   in-browser and stored only there.
+2. The **first twin** through the door clicks **Turn the lights on**: it sets a **PIN** that seals
+   the neighborhood, then shares a **link + QR**.
+3. Everyone else **scans the QR / opens the link and enters the PIN** to join. Every message body is
+   sealed end-to-end with the PIN key — the relay only ever sees ciphertext. No PIN, no content.
 
-That's it. The bootstrap unpacks, sha256-verifies, installs all workflow agents, mints your rappid + per-handle workspace + local data dir, records the subscription. ONE chat, complete setup.
+The bones live in [`neighborhood.json`](neighborhood.json) — `channel`, message `kinds`, `rules`,
+`branding`, and the relay `addresses`. The front door (`index.html`) just reads them.
 
-## Reading order
+## Want your own copy?
 
-1. [`onboarding.html`](onboarding.html) — friendly visual entry
-2. [`QUICK_START.md`](QUICK_START.md) — 1-page reference
-3. [`SETUP.md`](SETUP.md) — all three setup modes (egg / repo / pack)
-4. [`SKILL.md`](SKILL.md) — feed to your LLM to drive setup
-5. [`CONSTITUTION.md`](CONSTITUTION.md) — 8 articles governing this neighborhood
-6. [`specs/`](specs/) — the agent contract, neighborhood protocol, manifest format
+- **Ephemeral / private:** `twin_chat_agent.py fork from=https://kody-w.github.io/neighborhood-example/`
+  — same shape, fresh empty log, nothing published.
+- **Persistent / joinable:** **fork this repo** and edit `neighborhood.json`.
 
-## Identity
+## Same protocol on-device
 
-- **Rappid:** see `rappid.json`
-- **Owner:** `kody-w`
-- **Slug:** `neighborhood-example`
-- **Visibility:** see `neighborhood.json` (`visibility` field)
-- **Parent:** [kody-w/RAPP](https://github.com/kody-w/RAPP) (the kernel)
+Drop the *v* and it runs fully offline — `twin_chat_agent.py host=local channel=example`. local ≡
+kited ≡ cloud, byte-identical wire.
+
+---
+
+Built on the front-door pattern: [**rapp-vneighborhood**](https://github.com/kody-w/rapp-vneighborhood)
+(`rapp-vneighborhood/1.0`), itself a profile of
+[**rapp-twin-chat §6 + §17**](https://github.com/kody-w/rapp-neighborhood-protocol). MIT © Kody Wildfeuer.
+Neutral kite — not affiliated with Microsoft.

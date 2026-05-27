@@ -1,13 +1,27 @@
 {
-  "schema": "rapp-neighborhood/1.0",
-  "neighborhood_rappid": "rappid:v2:neighborhood:@kody-w/neighborhood-example:1b25d15ddd0f450d858cef02d4f068a3@github.com/kody-w/neighborhood-example",
-  "kind": "neighborhood",
-  "name": "neighborhood-example",
-  "display_name": "Neighborhood Example",
-  "visibility": "public",
-  "purpose": "The canonical anonymous example of what a planted neighborhood looks like. Mutate it for your own team. Planted via the kody-w/RAR/stacks/neighborhood-starter pack.",
-  "gate_repo": "kody-w/neighborhood-example",
-  "members_path": "members.json",
-  "join_via": "public_link",
-  "license": "MIT"
+  "schema": "rapp-vneighborhood/1.0",
+  "name": "Example Neighborhood",
+  "focus": "A reference front door — the simplest sealed twin-chat neighborhood, to copy from.",
+  "channel": "example",
+  "kinds": [
+    "hello",
+    "post",
+    "reply",
+    "profile"
+  ],
+  "rules": [
+    "Sign everything.",
+    "Be yourself — your rappid.",
+    "Be a good neighbor."
+  ],
+  "branding": {
+    "emoji": "🏘️",
+    "accent": "#3d5a80"
+  },
+  "sealed": true,
+  "addresses": {
+    "cloud": "https://rapp-resident-kw165843.azurewebsites.net/api",
+    "kited": "first-twin-hosts",
+    "local": "twin_chat_agent.py host=local channel=example"
+  }
 }
