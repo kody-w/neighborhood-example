@@ -122,13 +122,12 @@ def _mint_rappid(home: str) -> str:
         return kernel_mint(home).get("rappid", "")
     except Exception:
         pass
-    # Fully-airgapped fallback
+    # Fully-airgapped fallback. Emit the consolidated Eternity rappid
+    # (rappid:@<owner>/<slug>:<hex>, Art. XXXIV.1) — no v2:/<kind>:/@github.com
+    # envelope; `kind` lives in the record below.
     import platform, uuid
     host = platform.node().lower().replace(".", "-")[:32] or "device"
-    rappid = (
-        f"rappid:v2:hatched:@local/{host}-brainstem:"
-        f"{uuid.uuid4().hex}@github.com/local/{host}-brainstem"
-    )
+    rappid = f"rappid:@local/{host}-brainstem:{uuid.uuid4().hex}"
     with open(path, "w") as f:
         json.dump({
             "schema": "rapp-rappid/2.0",

@@ -1,10 +1,11 @@
 {
   "schema": "rapp-rappid/2.0",
-  "rappid": "rappid:v2:rapplication:@kody-w/neighborhood-example#dashboard:37d61e92b7114f39862b17832f8222ed@github.com/kody-w/neighborhood-example",
+  "rappid": "rappid:@kody-w/neighborhood-example:37d61e92b7114f39862b17832f8222ed",
   "kind": "rapplication",
   "name": "dashboard",
   "display_name": "Neighborhood Example Dashboard",
-  "parent_rappid": "rappid:v2:neighborhood:@kody-w/neighborhood-example:1b25d15ddd0f450d858cef02d4f068a3@github.com/kody-w/neighborhood-example",
+  "parent_rappid": "rappid:@kody-w/neighborhood-example:1b25d15ddd0f450d858cef02d4f068a3",
   "parent_repo": "https://github.com/kody-w/neighborhood-example",
-  "born_at": "2026-05-10T21:55:04Z"
+  "born_at": "2026-05-10T21:55:04Z",
+  "_migrated_from": "rappid:v2:rapplication:@kody-w/neighborhood-example#dashboard:37d61e92b7114f39862b17832f8222ed@github.com/kody-w/neighborhood-example"
 }

@@ -56,18 +56,22 @@ The repo's `.gitignore` excludes `.neighborhood-example-data/` so customer data 
 
 ## Identity
 
-Every neighborhood has its own `rappid.json` with a v2 rappid like:
+Every neighborhood has its own `rappid.json` with a consolidated rappid like:
 
 ```
-rappid:v2:neighborhood:@<owner>/<repo>:<32-hex>@github.com/<owner>/<repo>
+rappid:@<owner>/<slug>:<hex>
 ```
 
-The rappid is the global address. All canonical URLs derive from it by string parsing — see kernel Article XLVI.
+The rappid is the global address (CONSTITUTION Art. XXXIV.1: one string, no
+`v2:`/`<kind>:` prefix, no `@github.com/...` suffix). `kind` lives in the
+`rappid.json` record. All canonical URLs derive from it by string parsing — see
+kernel Article XLVI.
 
-A planted rapplication inside the neighborhood gets its own variant rappid:
+A planted rapplication inside the neighborhood gets its own `rappid.json`
+record (same `@<owner>/<slug>` location, its own hash, `kind: rapplication`):
 
 ```
-rappid:v2:rapplication:@<owner>/<repo>#<rapp-name>:<32-hex>@github.com/<owner>/<repo>
+rappid:@<owner>/<slug>:<hex>
 ```
 
 …with `parent_rappid` pointing at the neighborhood's rappid.
