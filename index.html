@@ -134,24 +134,37 @@ const DEFAULTS = {
 };
 let NH = DEFAULTS, RELAY = DEFAULTS.addresses.cloud, KEY = null, ID = null, hosting = false, embedPin = false, PIN = "";
 
-// ───────────────────────── identity (a vTwin: ECDSA P-256, address rappid:v3:<fp>) ─────────────────────────
+// ───────────────────────── identity (a vTwin: ECDSA P-256, Eternity rappid) ─────────────────────────
+const IDENTITY_SCHEMA = "rapp-rappid/2.0";
+const IDENTITY_SCOPE = "@kody-w/neighborhood-example";
+const hex = b => [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function rappidFromPublicKey(masterPublicKey){
+  const masterPubkeySPKI = await crypto.subtle.exportKey("spki", masterPublicKey);
+  const fp = hex(await crypto.subtle.digest("SHA-256", masterPubkeySPKI));
+  return "rappid:"+IDENTITY_SCOPE+":"+fp;
+}
+function storeIdentity(priv, pub, rappid){
+  localStorage.setItem("rapp.vtwin", JSON.stringify({schema:IDENTITY_SCHEMA, rappid, priv, pub}));
+}
 async function identity(){
   const saved = localStorage.getItem("rapp.vtwin");
   if(saved){
     const j = JSON.parse(saved);
     const priv = await crypto.subtle.importKey("jwk", j.priv, {name:"ECDSA",namedCurve:"P-256"}, true, ["sign"]);
-    return {priv, pub:j.pub, addr:j.addr};
+    const masterPublicKey = await crypto.subtle.importKey("raw", ub64u(j.pub), {name:"ECDSA",namedCurve:"P-256"}, true, ["verify"]);
+    const addr = await rappidFromPublicKey(masterPublicKey);
+    if(j.schema !== IDENTITY_SCHEMA || j.rappid !== addr || "addr" in j) storeIdentity(j.priv, j.pub, addr);
+    return {priv, pub:j.pub, addr};
   }
   const kp = await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"}, true, ["sign","verify"]);
   const raw = await crypto.subtle.exportKey("raw", kp.publicKey);            // X9.62 uncompressed point
   const pub = b64u(raw);
-  const fp  = b64u(await crypto.subtle.digest("SHA-256", raw));
-  const addr = "rappid:v3:"+fp;
+  const addr = await rappidFromPublicKey(kp.publicKey);
   const priv = await crypto.subtle.exportKey("jwk", kp.privateKey);
-  localStorage.setItem("rapp.vtwin", JSON.stringify({priv, pub, addr}));
+  storeIdentity(priv, pub, addr);
   return {priv: kp.privateKey, pub, addr};
 }
-const shortAddr = a => (a||"").replace("rappid:v3:","").slice(0,12);
+const shortAddr = a => (a||"").split(":").pop().slice(0,12);
 
 async function sign(privKey, bytes){
   const sig = await crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"}, privKey, bytes); // raw r||s (IEEE P-1363)
