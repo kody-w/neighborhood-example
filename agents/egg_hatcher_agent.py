@@ -122,15 +122,18 @@ def _mint_rappid(home: str) -> str:
         return kernel_mint(home).get("rappid", "")
     except Exception:
         pass
-    # Fully-airgapped fallback. Emit the consolidated Eternity rappid
-    # (rappid:@<owner>/<slug>:<hex>, Art. XXXIV.1) — no v2:/<kind>:/@github.com
-    # envelope; `kind` lives in the record below.
-    import platform, uuid
-    host = platform.node().lower().replace(".", "-")[:32] or "device"
-    rappid = f"rappid:@local/{host}-brainstem:{uuid.uuid4().hex}"
+    # Fully-airgapped fallback. Emit the canonical §6.1 rappid
+    # (rappid:@<owner>/<slug>:<64hex>) — the slug is canonicalized to the grammar
+    # and the tail is Hb("rapp/1:rappid", uuid4) (full 64-hex, domain-separated,
+    # keyless — NOT uuid4().hex, which is only 32 hex and fails §6.1). `kind`
+    # lives in the record below.
+    import platform, uuid, re, hashlib
+    host = re.sub(r"[^a-z0-9]+", "-", platform.node().lower()).strip("-")[:32] or "device"
+    _tail = hashlib.sha256(b"rapp/1:rappid\n" + uuid.uuid4().bytes).hexdigest()
+    rappid = f"rappid:@local/{host}-brainstem:{_tail}"
     with open(path, "w") as f:
         json.dump({
-            "schema": "rapp-rappid/2.0",
+            "schema": "rapp/1",
             "rappid": rappid, "kind": "hatched",
             "born_at": _now_iso(),
             "_minted_by": "bootstrap_agent (airgapped fallback)",
